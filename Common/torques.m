@@ -8,7 +8,6 @@ function wheelTorques = torques(simtime,state,simulation,driver)
 % drive/brake behavior and supplies all the necessary parameters for the maneuver
 % and simtime is the time at which the wheel torque is desired. wheelTorques
 % is a vector with the elements enumerated in the standard order.
-
 % Enumerate the wheels (this should appear in all your files)
 lf = 1; rf = 2; lr = 3; rr = 4;
 
