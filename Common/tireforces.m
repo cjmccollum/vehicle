@@ -14,7 +14,7 @@ if D=='p'; %parabolic
 elseif D=='u'; %uniform
     display('uniform');
     if abs(k/(1+k)) < (mu*Fz)/(2*Cx)
-        Fx = (k/(1+k))^3*(mu*Fz)^2/(4*Cx);
+        Fx = Cx*(k/k+1);
     else
         Fx = mu*Fz*sign(k)-((1+k)/k)*mu^2*Fz^2/(4*Cx);
     end
