@@ -1,35 +1,21 @@
-function varargout = tireforces(simulation,vehicle,varargin)
-% <filename> <VERY short description of the function>
-% Author: <your name>
-% Date: <development date>
-%
-% Usage: Changes depending on the input parameters.  If simulation.tmodel 
-% indicates that the desired tire model is linear, then the syntax for calling
-% this function should be: latForceVariable =
-% tireforces(simulation,vehicle,varargin) which returns a linear tire force
-% Fy = -Ca*alpha.  However, if simulation.tmodel indicates a nonlinear model,
-% possibly including coupled lateral and longitudinal forces, then the usage
-% could change to something like: [latForceVariable,longForceVariable] =
-% tireforces(simulation,vehicle,varargin) which returns both lateral and
-% longitudinal nonlinear tire forces according to the Fiala tire model.
+function Fx = tireforces(k,Cx,Fz,D)
 
-% Enumerate the wheels (this should appear in all of your files)
-lf = 1; rf = 2; lr = 3; rr = 4;
+mu=0.9;
+mus=0.9;
 
-% Here we use a "switch" statement to determine which type of tire model gets
-% used to calculate the tire forces. The function 'lower' is used to help make
-% the function more robust as it will convert the input string to lower-case
-switch lower(simulation.tmodel)
-    % Linear tire model
-    case 'linear'
-        if % Check to make sure the right data exists before calculating the
-        % tire forces, otherwise you may get junk answers
-        % Hint: check out the MATLAB help on the isfield(...) function
-        else
-            error('ERROR MESSAGE GOES HERE');
-        end
+if D=='p'; %parabolic
+    display('parabolic');
+    if abs(k/(1+k)) < 3*mu*Fz/Cx
+        Fx = Cx*(k/(1+k))-((Cx^2)/(3*mu*Fz))*(2-(mus/mu))*(k/(1+k))*abs(k/(1+k))+((Cx^3)/(9*(mu^2)*(Fz^2)))*((k/(1+k))^3)*(1-(2*mus)/(3*mu));
+    else
+        Fx = mu*Fz*sign(k/(1+k));
+    end
     
-    % Add other tire models here
-    otherwise 
-        error('ERROR MESSAGE GOES HERE');       % Another error check
+elseif D=='u'; %uniform
+    display('uniform');
+    if abs(k/(1+k)) < (mu*Fz)/(2*Cx)
+        Fx = (k/(1+k))^3*(mu*Fz)^2/(4*Cx);
+    else
+        Fx = mu*Fz*sign(k)-((1+k)/k)*mu^2*Fz^2/(4*Cx);
+    end
 end
